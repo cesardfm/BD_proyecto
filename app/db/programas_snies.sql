@@ -9,8 +9,19 @@ CREATE TABLE caracter_academico(
 );
 
 CREATE TABLE estados(
-    cod_estado varchar(1) NOT NULL PRIMARY KEY,
+    cod_estado serial NOT NULL PRIMARY KEY,
     nomb_estado varchar(20)
+);
+
+CREATE TABLE instituciones(
+    cod_inst varchar(4) NOT NULL PRIMARY KEY,
+    nomb_inst varchar(100) NOT NULL,
+    cod_estado varchar(1),
+    cod_academ int,
+    cod_sector int,
+    FOREIGN KEY (cod_estado) REFERENCES estados (cod_estado) ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (cod_academ) REFERENCES caracter_academico (cod_academ) ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (cod_sector) REFERENCES sectores (cod_sector) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE departamentos(
@@ -22,20 +33,7 @@ CREATE TABLE municipios(
     cod_municipio serial PRIMARY KEY,
     nomb_municipio varchar(50),
     cod_depar int,
-    FOREIGN KEY (cod_depar) REFERENCES departamentos (cod_depar)
-);
-
-CREATE TABLE instituciones(
-    cod_inst varchar(4) NOT NULL PRIMARY KEY,
-    nomb_inst varchar(100) NOT NULL,
-    cod_estado varchar(1),
-    cod_academ int,
-    cod_sector int,
-    cod_municipio int,
-    FOREIGN KEY (cod_municipio) REFERENCES municipios (cod_municipio),
-    FOREIGN KEY (cod_estado) REFERENCES estados (cod_estado) ,
-    FOREIGN KEY (cod_academ) REFERENCES caracter_academico (cod_academ),
-    FOREIGN KEY (cod_estado) REFERENCES sectores (cod_sector)
+    FOREIGN KEY (cod_depar) REFERENCES departamentos (cod_depar) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE nivel_academico(
@@ -49,7 +47,7 @@ CREATE TABLE modalidades(
 );
 
 CREATE TABLE campo_amplio(
-    cod_amplio serial PRIMARY KEY,
+    cod_amplio SERIAL PRIMARY KEY,
     nomb_amplio varchar(60)
 );
 
@@ -59,12 +57,12 @@ CREATE TABLE campo_especifico(
 );
 
 CREATE TABLE campo_detallado(
-    cod_detallado serial PRIMARY KEY,
+    cod_detallado SERIAL PRIMARY KEY,
     nomb_detallado varchar(100)
 );
 
 CREATE TABLE titulos(
-    cod_titulo varchar(6) NOT NULL PRIMARY KEY,
+    cod_titulo SERIAL NOT NULL PRIMARY KEY,
     nomb_titulo varchar(50), 
 );
 
@@ -82,19 +80,21 @@ CREATE TABLE programas(
     cod_titulo varchar(6),
     cod_estado varchar(1),
     cod_inst varchar(4),
-    FOREIGN KEY (cod_modal) REFERENCES modalidades (cod_modal),
-    FOREIGN KEY (cod_nivel) REFERENCES nivel_academico (cod_nivel) ,
-    FOREIGN KEY (cod_amplio) REFERENCES campo_amplio (cod_amplio),
-    FOREIGN KEY (cod_espec) REFERENCES campo_especifico (cod_espec)
-    FOREIGN KEY (cod_detallado) REFERENCES campo cod_detallado (cod_detallado),
-    FOREIGN KEY (cod_estado) REFERENCES estados (cod_estado) ,
-    FOREIGN KEY (cod_titulo) REFERENCES titulos (cod_titulo),
-    FOREIGN KEY (cod_inst) REFERENCES instituciones (cod_inst)
+    cod_municipio int,
+    FOREIGN KEY (cod_municipio) REFERENCES municipios (cod_municipio) ON UPDATE RESTRICT ON DELETE RESTRICT,
+    FOREIGN KEY (cod_modal) REFERENCES modalidades (cod_modal) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (cod_nivel) REFERENCES nivel_academico (cod_nivel) ON UPDATE CASCADE ON DELETE RESTRICT ,
+    FOREIGN KEY (cod_amplio) REFERENCES campo_amplio (cod_amplio) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (cod_espec) REFERENCES campo_especifico (cod_espec) ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (cod_detallado) REFERENCES campo cod_detallado (cod_detallado) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (cod_estado) REFERENCES estados (cod_estado) ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (cod_titulo) REFERENCES titulos (cod_titulo) ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (cod_inst) REFERENCES instituciones (cod_inst) ON UPDATE CASCADE ON DELETE RESTRICT
 
 );
 
 CREATE TABLE tipos_reconocimientos (
-    cod_reconoc varchar(3) NOT NULL PRIMARY KEY,
+    cod_reconoc SERIAL NOT NULL PRIMARY KEY,
     nomb_reconoc varchar(60)
 );
 
@@ -108,8 +108,8 @@ CREATE TABLE reconocimientos (
 );
 
 ALTER TABLE reconocimientos ADD CONSTRAINT pk_participa PRIMARY KEY(fecha_resolucion,cod_progr,cod_reconoc);
-ALTER TABLE reconocimientos ADD CONSTRAINT fk_cod_progr  FOREIGN KEY(cod_progr) REFERENCES programas(cod_progr);
-ALTER TABLE reconocimientos ADD CONSTRAINT fk_cod_reconoc FOREIGN KEY(cod_reconoc) REFERENCES tipos_reconocimientos(cod_reconoc);
+ALTER TABLE reconocimientos ADD CONSTRAINT fk_cod_progr  FOREIGN KEY(cod_progr) REFERENCES programas(cod_progr) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE reconocimientos ADD CONSTRAINT fk_cod_reconoc FOREIGN KEY(cod_reconoc) REFERENCES tipos_reconocimientos(cod_reconoc) ON UPDATE CASCADE ON DELETE SET NULL;
 
 
 
