@@ -1,0 +1,52 @@
+body {
+  background-color: #0d6efd4d;
+  position: relative;
+}
+
+.content_form {
+  position: relative;
+  margin: auto;
+  width: 680px;
+  height: 500px;
+}
+form {
+  margin-top: 20px;
+  font-size: 18px;
+  position: absolute;
+}
+
+.input-snies,
+.input-creditos {
+  width: 49.5%;
+  display: inline-block;
+}
+
+.selectpicker {
+  margin: 10px 3px;
+  display: block;
+  font-size: 18px;
+  border-color: #0d6efd;
+  background-color: #8dbaff;
+}
+
+.input-periocidad,
+.input-semestres {
+  width: 49.5%;
+  display: inline-block;
+}
+
+.btn-submit {
+  margin-top: 10px;
+  width: 100%;
+  height: 40px;
+  font-size: 18px;
+}
+#tipos-recono {
+  height: 70px;
+  background-color: #1069ee27;
+  border-radius: 5px;
+  overflow-y: scroll;
+}
+.form-check {
+  margin-left: 10px;
+}
